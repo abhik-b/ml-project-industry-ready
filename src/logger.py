@@ -1,7 +1,6 @@
 import logging
 import os
 from datetime import datetime
-from src.logger import logging
 
 
 LOG_FILE = f"{datetime.now().strftime('%d.%m.%Y--%H_%M_%S')}"
@@ -15,7 +14,3 @@ logging.basicConfig(
     format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
 )
-
-
-if __name__ == "__main__":
-    logging.info("Logging has started")
