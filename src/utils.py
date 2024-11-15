@@ -1,12 +1,14 @@
 import sys
 import os
 from src.exceptions import CustomException
+from src.logger import logging
 
 
 import dill
 import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
 
 
 def save_object(file_path, obj):
@@ -19,11 +21,21 @@ def save_object(file_path, obj):
         raise CustomException(e, sys)
 
 
-def evaluate_model(X_train, y_train, X_test, y_test, models) -> dict:
+def evaluate_model(X_train, y_train, X_test, y_test, models, params) -> dict:
     try:
         report = {}
         for i in range(len(list(models))):
             current_model = list(models.values())[i]
+            current_model_params = list(params.values())[i]
+
+            logging.info('Grid search activated ...')
+            gs = GridSearchCV(current_model, cv=5,
+                              param_grid=current_model_params)
+            gs.fit(X_train, y_train)
+
+            logging.info(f"Best Parameter for {
+                         list(models.keys())[i]} is {gs.best_params_}")
+            current_model.set_params(**gs.best_params_)
             current_model.fit(X_train, y_train)
 
             y_train_pred = current_model.predict(X_train)
