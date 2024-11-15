@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from catboost import CatBoostRegressor
 from sklearn.ensemble import AdaBoostRegressor, RandomForestRegressor, GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from xgboost import XGBRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -36,6 +36,8 @@ class ModelTrainer:
             logging.info("Split training & test input data")
             models = {
                 "Linear Regression": LinearRegression(),
+                "Ridge Regression": Ridge(),
+                "Lasso Regression": Lasso(),
                 "K Neighbors Regressor": KNeighborsRegressor(),
                 "Decision Tree Regressor": DecisionTreeRegressor(),
                 "Random Forest Regressor": RandomForestRegressor(),
@@ -46,7 +48,17 @@ class ModelTrainer:
             }
 
             params = {
-                "Linear Regression": {},
+                "Linear Regression": {
+                    'n_jobs': [-1, 1, 10, 100, 1000]
+                },
+                "Ridge Regression": {
+                    'alpha': [1, 10, 100, 1000],
+                    'max_iter': [1000, 10000, 100000]
+                },
+                "Lasso Regression": {
+                    'alpha': [0.01, 0.1, 1, 10, 100],
+                    'max_iter': [1000, 10000, 100000]
+                },
                 "K Neighbors Regressor": {
                     'n_neighbors': [3, 5, 7, 9, 11],
                     'metric': ['euclidean', 'manhattan'],

@@ -38,7 +38,6 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params) -> dict:
             current_model = list(models.values())[i]
             current_model_params = list(params.values())[i]
 
-            logging.info('Grid search activated ...')
             gs = GridSearchCV(current_model, cv=5,
                               param_grid=current_model_params)
             gs.fit(X_train, y_train)
